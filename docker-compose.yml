@@ -1,0 +1,25 @@
+version: '3.5'
+services:
+  app:
+    image: "${APP_IMAGE}"
+    command: ['npm', 'start']
+    container_name: "${APP_CONTAINER}"
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - "${APP_VOLUME}"
+    working_dir: "${APP_WORKING_DIR}"
+  ngrok:
+    container_name: ngrok
+    ports:
+      - "0.0.0.0:4040:4040"
+    image: wernight/ngrok
+    environment:
+      - NGROK_AUTH=${NGROK_AUTH}
+      - NGROK_PORT=${APP_CONTAINER}:${NGROK_PORT}
+      - NGROK_SUBDOMAIN=${NGROK_SUBDOMAIN}
+networks:
+  default:
+    name: "${NETWORK}"
